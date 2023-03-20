@@ -21,7 +21,33 @@ Department of Parks and Recreation of San Francisco decided to have a film-lover
 
 Few things to create track of before diving into design:
 
-Look through the data and make notes of which datasets and which columns could be useful for the department of parks and recreation’s film-lover festival database.
-After you have identified those above, clean, trim, and adjust the data as needed.
-Set up the database and populate it with the clean data.
+- Look through the data and make notes of which datasets and which columns could be useful for the department of parks and recreation’s film-lover festival database.
+- After you have identified those above, clean, trim, and adjust the data as needed.
+- Set up the database and populate it with the clean data.
 
+## Install package
+
+With a virtural environment activated, navigate to the `data-ingestion-project` directory and install the `sf-parks` package with the following command:
+
+```bash
+pip install -v .
+```
+
+## Usage
+
+The package will expose the `sf-parks` command line tool that will assist in managing a local sqlite database. 
+
+ - `--db`  or  `--database`: Provide a command, either `create` or `destroy` to stand up or tear down the database
+ - `--d`  or  `--data`: Provide either `all` to load all four datasets into SQL tables or provide a name of a dataset to load only the data for that table. These tables should be snake cased and constrained to the following four options:
+    + `film_locations`
+    + `park_scores`
+    + `private_open_spaces`
+    + `properties`
+
+## Example: 
+
+To create the database and populate all tables, run the following command:
+
+```bash
+sf-parks --db create --data all
+```

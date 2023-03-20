@@ -47,11 +47,18 @@ private_open_spaces = process_private_spaces(private_open_spaces_raw)
 properties = requests.get(properties_url).json()
 
 
+data_models_dict = {
+    'film_locations' : FilmLocations,
+    'park_scores' : ParkScores,
+    'private_open_spaces' : PrivateOpenSpaces,
+    'properties' : Properties
+}
+
 data_dict = {
-    film_locations : FilmLocations,
-    park_scores : ParkScores,
-    private_open_spaces : PrivateOpenSpaces,
-    properties : Properties
+    'film_locations' : film_locations,
+    'park_scores' : park_scores,
+    'private_open_spaces' : private_open_spaces,
+    'properties' : properties
 }
 
 
@@ -65,14 +72,7 @@ def insert_into_db(input: list[dict], model: SQLModel):
             sess.commit()
 
 def insert_all_data():
-    for data, model in data_dict.items():
-        insert_into_db(data, model)
-
-
-
-if __name__ == '__main__':
-    insert_into_db(properties, model=Properties)
-    insert_into_db(private_open_spaces, model=PrivateOpenSpaces)
-    insert_into_db(film_locations, FilmLocations)
-    insert_into_db(park_scores, model=ParkScores)
+    for dataset_name, dataset in data_dict.items():
+        model = data_models_dict.get(dataset_name)
+        insert_into_db(dataset, model)
     

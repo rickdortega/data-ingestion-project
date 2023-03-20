@@ -1,11 +1,5 @@
 import os
-import argparse
 from sqlmodel import SQLModel, create_engine
-# from .models import (
-#     FilmLocations,
-#     ParkScores,
-#     PrivateOpenSpaces
-# )
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -19,17 +13,7 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 def teardown_db():
-    os.remove(sqlite_file_name)
-
-
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('command')
-#     args = parser.parse_args()
-
-#     if args.command == 'create':
-#         create_db_and_tables()
-#     elif args.command == 'destroy':
-#         teardown_db()
-#     else:
-#         raise ValueError(f'Command passed to db.py must be one of `create` or `destroy` not {args.command}')
+    try:
+        os.remove(sqlite_file_name)
+    except Exception as e:
+        print(f'Error attempting to tear down database {sqlite_file_name}\nError: {e}')

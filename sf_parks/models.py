@@ -33,36 +33,27 @@ class ParkScores(SQLModel, table=True):
     fq: str  
     score: condecimal() = Field()
 
-class MyBaseModel(SQLModel):
-    def _iter(self, to_dict: bool = False, *args, **kwargs):
-        for dict_key, v in super()._iter(to_dict, *args, **kwargs):
-            if to_dict and self.__fields__[dict_key].field_info.extra.get('flatten', False):
-                assert isinstance(v, dict)
-                yield from v.items()
-            else:
-                yield dict_key, v
-
-class PrivateOpenSpaces(MyBaseModel, table=True):
+class PrivateOpenSpaces(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     popos_address: str
     hours: Optional[str]
-    type: Optional[str] #TODO maybe enum?
-    landscaping: Optional[str] #TODO maybe list of attributes
+    type: Optional[str] 
+    landscaping: Optional[str] 
     seating_no: Optional[str]
-    food_service: Optional[str] #TODO maybe enum?
-    art: Optional[str] #TODO maybe bool?
-    restrooms: Optional[str] #TODO maybe bool?
-    accessibility: Optional[str] #TODO maybe enum?
+    food_service: Optional[str] 
+    art: Optional[str] 
+    restrooms: Optional[str] 
+    accessibility: Optional[str] 
     location: Optional[str]
-    year: Optional[int] #TODO stored as a string, does it coerce correctly?
+    year: Optional[int] 
     description: Optional[str]
-    hours_type: Optional[str] #TODO maybe enum?
-    subject_to_downtown_pln: Optional[str] #TODO maybe bool?
+    hours_type: Optional[str] 
+    subject_to_downtown_pln: Optional[str]
     signage: Optional[str]
-    block_num: Optional[int] #TODO stored as a string, does it coerce correctly?
-    lot_num: Optional[int] #TODO stored as a string, does it coerce correctly?
-    parcel_num: Optional[int] #TODO stored as a string, does it coerce correctly?
+    block_num: Optional[int] 
+    lot_num: Optional[int] 
+    parcel_num: Optional[int] 
     latitude: Optional[str]
     longitude: Optional[str]
     sf_find_neighborhoods: Optional[int]
@@ -79,14 +70,6 @@ class Properties(SQLModel, table=True):
     acres: condecimal() = Field()
     tma_propertyid: int
     globalid: Optional[str]
-    @validator('globalid')
-    def clean_brackets(input_str: str) -> str:
-        brackets = ['{', '}']
-        for bracket in brackets:
-            input_str = input_str.replace(bracket, '')
-        return input_str
-    
-    # _globalid: validator('globalid', pre=True, allow_reuse=True)(clean_brackets)
     created_user: Optional[str]
     created_date: datetime
     last_edited_user: Optional[str]
@@ -112,4 +95,11 @@ class Properties(SQLModel, table=True):
     state_assembly: Optional[str]
     planning_neighborhood: Optional[str]
     # shape: dict[] #TODO figure this out
+    
+    @validator('globalid')
+    def clean_brackets(input_str: str) -> str:
+        brackets = ['{', '}']
+        for bracket in brackets:
+            input_str = input_str.replace(bracket, '')
+        return input_str
 

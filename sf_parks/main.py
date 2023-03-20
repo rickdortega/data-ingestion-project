@@ -1,12 +1,12 @@
 import argparse
 from .db import create_db_and_tables, teardown_db
-from .data import insert_into_db, insert_all_data, data_dict
+from .data import insert_into_db, insert_all_data, data_dict, data_models_dict
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--db', '-database')
-    parser.add_argument('-d', '-data')
+    parser.add_argument('--db', '--database')
+    parser.add_argument('--d', '--data')
     args = parser.parse_args()
 
     if args.db is not None:
@@ -14,7 +14,8 @@ def main():
             print('Creating database and tables.')
             create_db_and_tables()
         elif args.db == 'destroy':
-            teardown_db('Tearing down database.')
+            print('Tearing down database.')
+            teardown_db()
         else:
             raise ValueError(
                 f'Argument to --db or --database must be either `create` or `destroy` not {args.db}.'
@@ -23,12 +24,6 @@ def main():
         if args.d.lower() == 'all':
             insert_all_data()
         if args.d in data_dict:
-            model = data_dict.get(args.d)
-            insert_into_db(args.d, model)
-
-    if args.command == 'create':
-        create_db_and_tables()
-    elif args.command == 'destroy':
-        teardown_db()
-    else:
-        raise ValueError(f'Command passed to db.py must be one of `create` or `destroy` not {args.command}')
+            dataset = data_dict.get(args.d)
+            model = data_models_dict.get(args.d)
+            insert_into_db(dataset, model)
