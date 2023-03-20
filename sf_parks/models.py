@@ -49,7 +49,7 @@ class PrivateOpenSpaces(SQLModel, table=True):
     year: Optional[int] 
     description: Optional[str]
     hours_type: Optional[str] 
-    subject_to_downtown_pln: Optional[str]
+    subject_to_downtown_pln: Optional[bool]
     signage: Optional[str]
     block_num: Optional[int] 
     lot_num: Optional[int] 
@@ -60,6 +60,20 @@ class PrivateOpenSpaces(SQLModel, table=True):
     current_police_districts: Optional[int]
     current_supervisor_districts: Optional[int]
     analysis_neighborhoods: Optional[int]
+
+    @validator('subject_to_downtown_pln', pre=True)
+    def subject_to_downtown_pln_validator(input_str: str) -> str:
+        s = input_str.lower()
+        if s == 'yes':
+            return True
+        elif s == 'no':
+            return False
+        elif s == 'voluntary popos':
+            return True
+        else:
+            raise ValueError(
+                f'value for `subject_to_downtown_pln` must be one of `Yes`, `No`, or `Voluntary_POPOS`, not {input_str}.'
+            )
     
 
 class Properties(SQLModel, table=True):
